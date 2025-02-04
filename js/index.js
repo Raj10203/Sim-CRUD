@@ -113,6 +113,13 @@ function editButton(button) {
     document.getElementById('form').dataset.type = "edit";
 }
 
+function deleteRow(button) {
+    let id = button.dataset.val;
+    data.splice(id, 1);
+    jsonString = JSON.stringify(data);
+    localStorage.setItem('crud', jsonString)
+    location.reload();
+}
 document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
         switch (button.dataset.type) {
@@ -125,11 +132,7 @@ document.querySelectorAll('.btn').forEach(button => {
                 break;
 
             case 'delete':
-                let id = button.dataset.val;
-                data.splice(id, 1);
-                jsonString = JSON.stringify(data);
-                localStorage.setItem('crud', jsonString)
-                location.reload();
+                deleteRow(button);
                 break;
 
 
