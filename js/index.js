@@ -1,12 +1,6 @@
-let data, jsonString;
-if (localStorage.getItem('crud') == undefined) {
-    data = [];
-    localStorage.setItem('crud', JSON.stringify(data))
-}
-jsonString = localStorage.getItem('crud');
-data = JSON.parse(jsonString);
+let jsonString = localStorage.getItem('crud');
+let data = JSON.parse(jsonString) || [];
 const fileInput = document.querySelector('#addImage');
-
 let base64String;
 displayEliments(data);
 resetSortIcons();
@@ -55,9 +49,7 @@ function editClickHandler(pName, pPrice, pDescription, productId) {
 }
 
 function addClickHandler(pName, pPrice, pDescription) {
-    if (jsonString) {
-        data = JSON.parse(jsonString);
-    }
+    data = JSON.parse(jsonString);
     let productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1;
     let newData = {
         productId: productId,
