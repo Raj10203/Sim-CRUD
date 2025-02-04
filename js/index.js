@@ -138,6 +138,7 @@ document.querySelectorAll('.btn').forEach(button => {
                 location.reload();
                 break;
 
+
             case 'sorting':
                 sortAndDisplay(button);
                 break;
