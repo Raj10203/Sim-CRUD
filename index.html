@@ -22,7 +22,8 @@
 <body>
     <div class="container">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+            data-type="add">
             Add item
         </button>
 
@@ -69,27 +70,29 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="#">
+                    <form action="#" id="form" data-type="add">
+                        <input type="hidden" id="productId" value="" data-val="">
                         <div class="mb-3">
                             <label for="addProductName" class="form-label">Product Name</label>
                             <input type="text" class="form-control" id="addProductName" placeholder="Product Name"
-                                maxlength="10">
+                                maxlength="10" required/>
                         </div>
                         <div class="mb-3">
                             <label for="addImage" class="form-label">Image</label>
-                            <input type="file" accept="image/png" class="form-control" id="addImage"
-                                placeholder="Image">
+                            <img src="" class="tableImage" alt="" id="showImg">
+                            <input type="file" accept="image/png" class="form-control" id="addImage" required
+                                placeholder="Image" />
                         </div>
                         <div class="mb-3">
                             <label for="addPrice" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="addPrice" placeholder="Price">
+                            <input type="number" class="form-control" id="addPrice" placeholder="Price" required/>
                         </div>
                         <div class="mb-3">
                             <label for="addDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="addDescription" rows="3" placeholder="Description ..."
-                                maxlength="100"></textarea>
+                                maxlength="100" required></textarea>
                         </div>
-                        <input type="submit" class="btn btn-primary" data-type="add-submit">
+                        <input type="submit" class="btn btn-primary" id="formSubmit" data-type="add-submit">
                     </form>
                 </div>
             </div>
