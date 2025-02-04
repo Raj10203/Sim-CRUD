@@ -27,8 +27,6 @@ function resetSortIcons() {
         button.classList.add("fa-sort");
         button.classList.remove("fa-sort-up");
         button.classList.remove("fa-sort-down");
-        button.addEventListener('click', () => {
-        })
     })
 }
 
@@ -39,7 +37,6 @@ form.addEventListener('submit', () => {
     const pDescription = document.getElementById('addDescription');
     const productId = document.getElementById('productId');
     (form.dataset.type == "add") ? addClickHandler(pName, pPrice, pDescription) : editClickHandler(pName, pPrice, pDescription, productId);
-
 })
 
 function editClickHandler(pName, pPrice, pDescription, productId) {
@@ -54,12 +51,12 @@ function editClickHandler(pName, pPrice, pDescription, productId) {
 
 function addClickHandler(pName, pPrice, pDescription) {
     data = JSON.parse(jsonString);
-    productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1;
+    let productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1;
     let newData = {
         productId: productId,
-        productName: pName,
-        price: Number(pPrice),
-        description: pDescription,
+        productName: pName.value,
+        price: Number(pPrice.value),
+        description: pDescription.value,
         image: base64String,
     }
     data.push(newData);
@@ -93,31 +90,34 @@ function sortAndDisplay(button) {
     else {
         button.firstElementChild.classList.add("fa-sort-down");
         button.dataset.sort = "dsc";
-        button.setAttribute('data-sort', 'dsc');
         data = data.sort((a, b) => (type == 'number') ? b[value] - a[value] : String(b[value]).localeCompare(String(a[value])))
     }
     displayEliments(data);
+}
+
+function editButton(button) {
+    let pName = document.getElementById('addProductName');
+    let pPrice = document.getElementById('addPrice');
+    let pDescription = document.getElementById('addDescription');
+    let productId = document.getElementById('productId');
+    let showImg = document.getElementById('showImg');
+    let pImg = document.getElementById('addImage');
+    pImg.required = false;
+    data = JSON.parse(jsonString);
+    productId.value = button.dataset.val;
+    showImg.setAttribute('src', data[Number(productId.value)]['image'])
+    productId.dataset.val = data[Number(productId.value)]['productId'];
+    pName.value = data[Number(productId.value)]['productName']
+    pPrice.value = data[Number(productId.value)]['price'];
+    pDescription.value = data[Number(productId.value)]['description']
+    document.getElementById('form').dataset.type = "edit";
 }
 
 document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
         switch (button.dataset.type) {
             case 'edit':
-                let pName = document.getElementById('addProductName');
-                let pPrice = document.getElementById('addPrice');
-                let pDescription = document.getElementById('addDescription');
-                let productId = document.getElementById('productId');
-                let showImg = document.getElementById('showImg');
-                let pImg = document.getElementById('addImage');
-                pImg.required = false;
-                data = JSON.parse(jsonString);
-                productId.value = button.dataset.val;
-                showImg.setAttribute('src', data[Number(productId.value)]['image'])
-                productId.dataset.val = data[Number(productId.value)]['productId'];
-                pName.value = data[Number(productId.value)]['productName']
-                pPrice.value = data[Number(productId.value)]['price'];
-                pDescription.value = data[Number(productId.value)]['description']
-                document.getElementById('form').dataset.type = "edit";
+                editButton(button);
                 break;
 
             case 'add':
