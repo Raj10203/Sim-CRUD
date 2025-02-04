@@ -1,5 +1,7 @@
-let obj = localStorage.getItem('crud');
-let data = JSON.parse(obj);
+let jsonString = localStorage.getItem('crud');
+let data = JSON.parse(jsonString);
+const fileInput = document.querySelector('#addImage');
+
 let base64String;
 displayEliments(data);
 resetSortIcons();
@@ -20,6 +22,7 @@ function displayEliments(data) {
         <td><button class="btn btn-outline-success" data-type="edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-val="${i}">  <i class="fa-solid fa-pencil"></i>  </button>  <button class="btn btn-outline-danger" data-type="delete" data-val="${i}">  <i class="fa-solid fa-trash"></i>  </button> </td></tr>`
     }
 }
+
 function resetSortIcons() {
     document.querySelectorAll('.sort').forEach(button => {
         button.classList.add("fa-sort");
@@ -28,19 +31,58 @@ function resetSortIcons() {
         button.addEventListener('click', () => {
         })
     })
-
 }
-const fileInput = document.querySelector('#addImage');
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
 
+let form = document.getElementById('form');
+form.addEventListener('submit', () => {
+    const pName = document.getElementById('addProductName');
+    const pPrice = document.getElementById('addPrice');
+    const pDescription = document.getElementById('addDescription');
+    const productId = document.getElementById('productId');
+    (form.dataset.type == "add") ? addClickHandler(pName, pPrice, pDescription) : editClickHandler(pName, pPrice, pDescription, productId);
+
+})
+
+function editClickHandler(pName, pPrice, pDescription, productId) {
+    console.log("edit");
+    data = JSON.parse(jsonString);
+    pName.setAttribute('value', data[Number(productId.value)]['productName'])
+    console.log(data[Number(productId.value)]);
+    data[Number(productId.value)]['productName'] = pName.value;
+    data[Number(productId.value)]['image'] = (base64String == undefined) ? data[Number(productId.value)]["image"] : base64String;
+    data[Number(productId.value)]['price'] = Number(pPrice.value);
+    data[Number(productId.value)]['description'] = pDescription.value;
+    localStorage.setItem('crud', JSON.stringify(data));
+}
+
+function addClickHandler(pName, pPrice, pDescription) {
+    data = JSON.parse(jsonString);
+    productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1;
+    let newData = {
+        productId: productId,
+        productName: pName,
+        price: Number(pPrice),
+        description: pDescription,
+        image: base64String,
+    }
+    data.push(newData);
+    console.log(data);
+    jsonString = JSON.stringify(data);
+    localStorage.setItem('crud', jsonString);
+    base64String = "";
+}
+
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onloadend = () => {
+    const showImg = document.getElementById('showImg');
+    reader.onloadend = await function () {
         base64String = reader.result;
-        console.log(base64String);
+        showImg.setAttribute('src', base64String);
     };
-    reader.readAsDataURL(file);
+    await reader.readAsDataURL(file);
 });
+
 function sortAndDisplay(button) {
     let value = button.dataset.value;
     let sort = button.dataset.sort;
@@ -61,44 +103,46 @@ function sortAndDisplay(button) {
     }
     displayEliments(data);
 }
+
 document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
         switch (button.dataset.type) {
+            case 'edit':
+                let pName = document.getElementById('addProductName');
+                let pPrice = document.getElementById('addPrice');
+                let pDescription = document.getElementById('addDescription');
+                let productId = document.getElementById('productId');
+                let showImg = document.getElementById('showImg');
+                let pImg = document.getElementById('addImage');
+                pImg.required = false;
+                data = JSON.parse(jsonString);
+                productId.value = button.dataset.val;
+                showImg.setAttribute('src', data[Number(productId.value)]['image'])
+                productId.dataset.val = data[Number(productId.value)]['productId'];
+                pName.value = data[Number(productId.value)]['productName']
+                pPrice.value = data[Number(productId.value)]['price'];
+                pDescription.value = data[Number(productId.value)]['description']
+                document.getElementById('form').dataset.type = "edit";
+                break;
+
+            case 'add':
+                document.getElementById('form').dataset.type = "add";
+                break;
+
             case 'delete':
                 let id = button.dataset.val;
                 data.splice(id, 1);
                 console.log(data);
-                let obj = JSON.stringify(data);
-                localStorage.setItem('crud', obj)
+                jsonString = JSON.stringify(data);
+                localStorage.setItem('crud', jsonString)
                 location.reload();
                 break;
 
-            case 'add-submit':
-                let obj23 = localStorage.getItem('crud');
-                data = JSON.parse(obj23)
-                let pName = document.getElementById('addProductName').value;
-                let pPrice = document.getElementById('addPrice').value;
-                let pDescription = document.getElementById('addDescription').value;
-                let productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1
-                let newData = {
-                    productId: productId,
-                    productName: pName,
-                    price: Number(pPrice),
-                    description: pDescription,
-                    image: base64String,
-                }
-                data.push(newData);
-                console.log(data);
-                let obj2 = JSON.stringify(data);
-                localStorage.setItem('crud', obj2);
-                break;
 
-            case 'add-submit':
-                
-                break;
             case 'sorting':
                 sortAndDisplay(button);
                 break;
+
             default:
                 break;
         }
