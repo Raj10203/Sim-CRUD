@@ -94,6 +94,7 @@ document.querySelectorAll('.btn').forEach(button => {
                 break;
 
             case 'add-submit':
+                
                 break;
             case 'sorting':
                 sortAndDisplay(button);
