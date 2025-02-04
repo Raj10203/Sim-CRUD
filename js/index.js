@@ -8,7 +8,6 @@ resetSortIcons();
 document.getElementById('productIdIcon').classList.remove('fa-sort');
 document.getElementById('productIdIcon').classList.add('fa-sort-up');
 function displayEliments(data) {
-    console.log(data);
     let tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
@@ -44,10 +43,8 @@ form.addEventListener('submit', () => {
 })
 
 function editClickHandler(pName, pPrice, pDescription, productId) {
-    console.log("edit");
     data = JSON.parse(jsonString);
     pName.setAttribute('value', data[Number(productId.value)]['productName'])
-    console.log(data[Number(productId.value)]);
     data[Number(productId.value)]['productName'] = pName.value;
     data[Number(productId.value)]['image'] = (base64String == undefined) ? data[Number(productId.value)]["image"] : base64String;
     data[Number(productId.value)]['price'] = Number(pPrice.value);
@@ -66,7 +63,6 @@ function addClickHandler(pName, pPrice, pDescription) {
         image: base64String,
     }
     data.push(newData);
-    console.log(data);
     jsonString = JSON.stringify(data);
     localStorage.setItem('crud', jsonString);
     base64String = "";
@@ -87,7 +83,6 @@ function sortAndDisplay(button) {
     let value = button.dataset.value;
     let sort = button.dataset.sort;
     let type = button.dataset.content;
-    console.log(button.firstElementChild);
     resetSortIcons();
     button.firstElementChild.classList.remove("fa-sort");
     if (sort == "dsc") {
@@ -132,7 +127,6 @@ document.querySelectorAll('.btn').forEach(button => {
             case 'delete':
                 let id = button.dataset.val;
                 data.splice(id, 1);
-                console.log(data);
                 jsonString = JSON.stringify(data);
                 localStorage.setItem('crud', jsonString)
                 location.reload();
