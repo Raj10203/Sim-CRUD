@@ -1,7 +1,6 @@
 let jsonString = localStorage.getItem('crud');
-let data = JSON.parse(jsonString);
+let data = JSON.parse(jsonString) || [];
 const fileInput = document.querySelector('#addImage');
-
 let base64String;
 displayEliments(data);
 resetSortIcons();
