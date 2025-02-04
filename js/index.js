@@ -1,7 +1,5 @@
 let obj = localStorage.getItem('crud');
 let data = JSON.parse(obj);
-let acsDcs = 0;
-let productId = 1;
 let base64String;
 displayEliments(data);
 resetSortIcons();
@@ -19,7 +17,7 @@ function displayEliments(data) {
         <td><img class="tableImage" src="${data[i]["image"]}" /></td>
         <td>${data[i]['price']}</td>
         <td>${data[i]['description']}</td>
-        <td><button class="btn btn-outline-success" data-type="edit" data-val="${i}">  <i class="fa-solid fa-pencil"></i>  </button>  <button class="btn btn-outline-danger" data-type="delete" data-val="${i}">  <i class="fa-solid fa-trash"></i>  </button> </td></tr>`
+        <td><button class="btn btn-outline-success" data-type="edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-val="${i}">  <i class="fa-solid fa-pencil"></i>  </button>  <button class="btn btn-outline-danger" data-type="delete" data-val="${i}">  <i class="fa-solid fa-trash"></i>  </button> </td></tr>`
     }
 }
 function resetSortIcons() {
@@ -53,14 +51,14 @@ function sortAndDisplay(button) {
     if (sort == "dsc") {
         button.lastChild.classList.add("fa-sort-up");
         button.dataset.sort = "asc";
-        data = data.sort((a, b) => (type=='number') ? a[value] - b[value] : String(a[value]).localeCompare(String(b[value])))
+        data = data.sort((a, b) => (type == 'number') ? a[value] - b[value] : String(a[value]).localeCompare(String(b[value])))
         acsDcs = 0;
     }
     else {
         button.lastChild.classList.add("fa-sort-down");
         button.dataset.sort = "dsc";
         button.setAttribute('data-sort', 'dsc');
-        data = data.sort((a, b) => (type=='number') ? b[value] - a[value] : String(b[value]).localeCompare(String(a[value])))
+        data = data.sort((a, b) => (type == 'number') ? b[value] - a[value] : String(b[value]).localeCompare(String(a[value])))
         acsDcs = 1;
     }
     displayEliments(data);
@@ -69,7 +67,7 @@ document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
         switch (button.dataset.type) {
             case 'delete':
-                let id = button.dataset.value;
+                let id = button.dataset.val;
                 data.splice(id, 1);
                 console.log(data);
                 let obj = JSON.stringify(data);
@@ -83,7 +81,7 @@ document.querySelectorAll('.btn').forEach(button => {
                 let pName = document.getElementById('addProductName').value;
                 let pPrice = document.getElementById('addPrice').value;
                 let pDescription = document.getElementById('addDescription').value;
-                productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1
+                let productId = (data.length > 0) ? data[data.length - 1].productId + 1 : 1
                 let newData = {
                     productId: productId,
                     productName: pName,
@@ -97,6 +95,8 @@ document.querySelectorAll('.btn').forEach(button => {
                 localStorage.setItem('crud', obj2);
                 break;
 
+            case 'add-submit':
+                break;
             case 'sorting':
                 sortAndDisplay(button);
                 break;
