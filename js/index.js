@@ -45,21 +45,19 @@ function sortAndDisplay(button) {
     let value = button.dataset.value;
     let sort = button.dataset.sort;
     let type = button.dataset.content;
-    console.log(button.lastChild);
-    resetSortIcons()
-    button.lastChild.classList.remove("fa-sort");
+    console.log(button.firstElementChild);
+    resetSortIcons();
+    button.firstElementChild.classList.remove("fa-sort");
     if (sort == "dsc") {
-        button.lastChild.classList.add("fa-sort-up");
+        button.firstElementChild.classList.add("fa-sort-up");
         button.dataset.sort = "asc";
         data = data.sort((a, b) => (type == 'number') ? a[value] - b[value] : String(a[value]).localeCompare(String(b[value])))
-        acsDcs = 0;
     }
     else {
-        button.lastChild.classList.add("fa-sort-down");
+        button.firstElementChild.classList.add("fa-sort-down");
         button.dataset.sort = "dsc";
         button.setAttribute('data-sort', 'dsc');
         data = data.sort((a, b) => (type == 'number') ? b[value] - a[value] : String(b[value]).localeCompare(String(a[value])))
-        acsDcs = 1;
     }
     displayEliments(data);
 }
