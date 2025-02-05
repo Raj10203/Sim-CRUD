@@ -74,7 +74,11 @@ fileInput.addEventListener('change', async (e) => {
     };
     await reader.readAsDataURL(file);
 });
-
+const filter = document.getElementById('filter')
+filter.addEventListener('input', () => {
+    let searchData = data.filter(product => product['productId'] == Number(filter.value) || product.productName.toLowerCase().includes(String(filter.value.toLowerCase())))
+    displayEliments(searchData);
+});
 function sortAndDisplay(button) {
     let value = button.dataset.value;
     let sort = button.dataset.sort;
