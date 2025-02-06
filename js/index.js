@@ -1,5 +1,5 @@
-let jsonString = localStorage.getItem('crud');
-let data = JSON.parse(jsonString) || [];
+let jsonString = localStorage.getItem('crud') || "[]";
+let data = JSON.parse(jsonString) ;
 const fileInput = document.querySelector('#addImage');
 let base64String;
 displayEliments(data);
@@ -8,6 +8,7 @@ document.getElementById('productIdIcon').classList.remove('fa-sort');
 document.getElementById('productIdIcon').classList.add('fa-sort-up');
 function displayEliments(data) {
     let tableBody = document.getElementById('tableBody');
+    let str = (data['description'].length > 50) ? data['description'].substring(0, 70) + "..." : data['description'];
     tableBody.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
         const element = data[i];
@@ -16,7 +17,7 @@ function displayEliments(data) {
         <td>${data[i]['productName']}</td>
         <td><img class="tableImage" src="${data[i]["image"]}" /></td>
         <td>${data[i]['price']}</td>
-        <td>${data[i]['description']}</td>
+        <td>${str}</td>
         <td><button class="btn btn-outline-success" data-type="edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-val="${i}">  <i class="fa-solid fa-pencil"></i>  </button>  <button class="btn btn-outline-danger" data-type="delete" data-val="${i}">  <i class="fa-solid fa-trash"></i>  </button> </td></tr>`
     }
 }
@@ -76,7 +77,7 @@ fileInput.addEventListener('change', async (e) => {
 });
 const filter = document.getElementById('filter')
 filter.addEventListener('input', () => {
-    let searchData = data.filter(product => product['productId'] == Number(filter.value) || product.productName.toLowerCase().includes(String(filter.value.toLowerCase())))
+    let searchData = data.filter(product => String(product['productId']).includes(filter.value)|| product.productName.toLowerCase().includes(String(filter.value.toLowerCase())))
     displayEliments(searchData);
 });
 function sortAndDisplay(button) {
